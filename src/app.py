@@ -69,7 +69,7 @@ def initiate_logger(logging_level=None) -> logging.Logger:
 
     return logger
 
-def check_directory(file_path:str)-> str:
+def standardize_directory(file_path:str)-> str:
  
     if file_path.startswith('/') or file_path.startswith('\\'):
         file_path = file_path[1:]
@@ -86,8 +86,6 @@ def check_directory(file_path:str)-> str:
 
 
 def df_read_excluding_cols(file_path:str, *cols_to_exclude)-> pyspark.sql.dataframe.DataFrame:
-
- 
 
     try:
         df = spark.read.csv(file_path, header=True, inferSchema=True)
@@ -161,8 +159,8 @@ def main():
     check_paramaters(params)
     file_path_one = params['dataset_one']
     file_path_two = params['dataset_two']
-    file_path_one = check_directory(file_path_one)
-    file_path_two = check_directory(file_path_two)
+    file_path_one = standardize_directory(file_path_one)
+    file_path_two = standardize_directory(file_path_two)
 
     # Read CSV file into a DataFrame
     df_1 = df_read_excluding_cols(file_path_one, 'first_name', 'last_name')
