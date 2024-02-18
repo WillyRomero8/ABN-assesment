@@ -33,7 +33,7 @@ def get_parameters() -> dict:
  
     return parameters
 
-def check_paramaters(params:dict):
+def check_parameters(params:dict):
     """
     Check if the required parameters are passed and log relevant information.
 
@@ -91,6 +91,13 @@ def df_read_excluding_cols(file_path:str, *cols_to_exclude)-> pyspark.sql.datafr
         df = spark.read.csv(file_path, header=True, inferSchema=True)
     except Exception as e:
         logger.error(f"An error occurred in df_read_excluding_cols: {str(e)}")
+    
+    # Check if all tuple values are present in the list
+    not_present_col = [col for col in cols_to_exclude if col not in df.columns]
+
+    # Warning
+    if not_present_col:
+        logger.warning(f"Not all the given columns to exclude are actual columns in the dataframe; the app will omit all those cases: {not_present_col}")
       
     try:
         filtered_df = df.drop(*cols_to_exclude)
@@ -178,7 +185,7 @@ col_mapping = {"id":"client_identifier",
 def main():
     
     params = get_parameters()
-    check_paramaters(params)
+    check_parameters(params)
     file_path_one = params['dataset_one']
     file_path_two = params['dataset_two']
     file_path_one = standardize_directory(file_path_one)
