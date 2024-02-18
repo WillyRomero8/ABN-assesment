@@ -1,8 +1,7 @@
 import os
-import logging
 import argparse
 import pyspark.sql
-from logging.handlers import RotatingFileHandler
+from function_log import initiate_logger
 from pyspark.sql.functions import col
 
 
@@ -39,35 +38,6 @@ def check_paramaters(params:dict):
     
     logger.info("The number of paramters is valid.")
 
-# Initiate logger
-def initiate_logger(logging_level=None) -> logging.Logger:
-
-    # Create a logs directory if it doesn't exist
-    logs_dir = 'logs'
-    os.makedirs(logs_dir, exist_ok=True)
-
-    # Configure logging
-    logger = logging.getLogger()
-    logger.setLevel(logging.DEBUG)
-
-    # Create a rotating file handler in the logs directory
-    log_file_path = os.path.join(logs_dir, 'app.log')
-
-    logging.basicConfig(
-        handlers=[RotatingFileHandler(log_file_path, maxBytes=10_000, backupCount=2)],
-        #filename = 'logs/app.log',
-        format='%(asctime)s - %(levelname)s - %(message)s',
-        level=logging.INFO)
-    logger = logging.getLogger("abn-assesment")
-    
-    if logging_level:
-        level = logging_level
-    else:
-        level = logging.INFO
-    
-    logger.setLevel(level)
-
-    return logger
 
 def standardize_directory(file_path:str)-> str:
  
@@ -112,6 +82,8 @@ def df_filter_rows(df:pyspark.sql.DataFrame, condition:list, attribute:str)-> py
         filtered_df = df.filter(col(attribute).isin(condition))
     except Exception as e:
         logger.error(f"An error occurred in df_filter_rows: {str(e)}")
+    
+    logger.info(f"The output dataset will contain the records of the following nationalitites:{condition}")
 
     return filtered_df
 
@@ -165,7 +137,10 @@ def main():
     # Read CSV file into a DataFrame
     df_1 = df_read_excluding_cols(file_path_one, 'first_name', 'last_name')
     nat_to_f = params["nationalities"]
-    df_1 = df_filter_rows(df_1, nat_to_f, 'country')
+
+    if not nat_to_f == None: 
+        df_1 = df_filter_rows(df_1, nat_to_f, 'country')
+
     df_2 = df_read_excluding_cols(file_path_two, 'cc_n')
     try:
         joined_df = df_1.join(df_2, on="id", how="inner")
