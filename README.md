@@ -52,3 +52,13 @@ This application is designed to process csv files and generate an output by:
 > [!NOTE]
 > Whereas path_file1 and path_file2 are mandatory parameters, the list of nationalitites is not.
 > Nonetheless the application will not filter by any nationality and there will be a warning log  
+
+> [!WARNING]
+> When a certain nationalaty contains blank spaces like **United Kingdom**, all the values have to be
+> passed between " ", singlw quotes don't work
+
+For this first use case, what we should run is:
+``` python app.py raw_data/dataset_one.csv raw_data/dataset_two.csv --nationalities "United Kingdom" "Netherlands" ```
+
+5. After all these steps, you will see our output dataset in ```<project_path>/client_data/```
+
