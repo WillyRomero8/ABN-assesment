@@ -6,7 +6,12 @@ from pyspark.sql.functions import col
 
 
 def get_parameters() -> dict:
+    """
+    Parse command line arguments and return them as a dictionary.
 
+    :return: A dictionary containing parsed command line arguments.
+    :rtype: dict
+    """
     parser=argparse.ArgumentParser()
 
     parser.add_argument(
@@ -29,6 +34,13 @@ def get_parameters() -> dict:
     return parameters
 
 def check_paramaters(params:dict):
+    """
+    Check if the required parameters are passed and log relevant information.
+
+    :param params: A dictionary containing parsed command line arguments.
+    :type params: dict
+    :raises IndexError: If the number of parameters is not equal to 3.
+    """
     if len(params) != 3:
         logger.error(f"You should pass 3 paramaters; path_file_one, path_file_two and nationalities to filter")
         raise IndexError(f"You should pass 3 paramaters; path_file_one, path_file_two and nationalities to filter")
@@ -40,7 +52,16 @@ def check_paramaters(params:dict):
 
 
 def standardize_directory(file_path:str)-> str:
- 
+    """
+    Standardize the directory path by replacing forward slashes with backslashes
+    and logging relevant information.
+
+    :param file_path: The file path to be standardized.
+    :type file_path: str
+    :return: The standardized file path.
+    :rtype: str
+    :raises FileNotFoundError: If the specified file path does not exist.
+    """
     if file_path.startswith('/') or file_path.startswith('\\'):
         file_path = file_path[1:]
     
@@ -56,20 +77,21 @@ def standardize_directory(file_path:str)-> str:
 
 
 def df_read_excluding_cols(file_path:str, *cols_to_exclude)-> pyspark.sql.dataframe.DataFrame:
+    """
+    Read a CSV file into a DataFrame and exclude specified columns.
 
+    :param file_path: The path to the input CSV file.
+    :type file_path: str
+    :param cols_to_exclude: Columns to be excluded from the DataFrame.
+    :type cols_to_exclude: tuple
+    :return: The DataFrame with specified columns excluded.
+    :rtype: pyspark.sql.dataframe.DataFrame
+    """
     try:
         df = spark.read.csv(file_path, header=True, inferSchema=True)
     except Exception as e:
         logger.error(f"An error occurred in df_read_excluding_cols: {str(e)}")
-    
-
-    # Check if all tuple values are present in the list
-    not_present_col = [col for col in cols_to_exclude if col not in df.columns]
-
-    # Warning
-    if not_present_col:
-        logger.warning(f"Not all the given columns to exclude are actual columns in the dataframe; the app will omit all those cases: {not_present_col}")
-    
+      
     try:
         filtered_df = df.drop(*cols_to_exclude)
     except Exception as e:
@@ -78,6 +100,18 @@ def df_read_excluding_cols(file_path:str, *cols_to_exclude)-> pyspark.sql.datafr
     return filtered_df
 
 def df_filter_rows(df:pyspark.sql.DataFrame, condition:list, attribute:str)-> pyspark.sql.DataFrame:
+    """
+    Filter rows of a DataFrame based on a given condition and attribute.
+
+    :param df: The DataFrame to be filtered.
+    :type df: pyspark.sql.DataFrame
+    :param condition: List of values to filter on.
+    :type condition: list
+    :param attribute: The attribute/column name to filter on.
+    :type attribute: str
+    :return: The filtered DataFrame.
+    :rtype: pyspark.sql.DataFrame
+    """
     try:
         filtered_df = df.filter(col(attribute).isin(condition))
     except Exception as e:
@@ -88,7 +122,16 @@ def df_filter_rows(df:pyspark.sql.DataFrame, condition:list, attribute:str)-> py
     return filtered_df
 
 def df_renamed_columns(df:pyspark.sql.DataFrame, column_mapping:dict) -> pyspark.sql.DataFrame:
+    """
+    Rename columns in a DataFrame based on the provided mapping.
 
+    :param df: The DataFrame to be modified.
+    :type df: pyspark.sql.DataFrame
+    :param column_mapping: A dictionary specifying the old and new column names.
+    :type column_mapping: dict
+    :return: The DataFrame with renamed columns.
+    :rtype: pyspark.sql.DataFrame
+    """
     renamed_df = df
     for old_name, new_name in column_mapping.items():
         try:
@@ -99,7 +142,14 @@ def df_renamed_columns(df:pyspark.sql.DataFrame, column_mapping:dict) -> pyspark
     return renamed_df
 
 def df_to_csv(df:pyspark.sql.DataFrame, output_path:str):
+    """
+    Write a DataFrame to a CSV file in a specific folder.
 
+    :param df: The DataFrame to be written.
+    :type df: pyspark.sql.DataFrame
+    :param output_path: The path to save the resulting CSV file.
+    :type output_path: str
+    """
     # Setting as a variable the root directory
     cwd = os.getcwd()
     rd = os.path.abspath(os.path.join(cwd, os.pardir))
@@ -119,7 +169,7 @@ spark = pyspark.sql.SparkSession.builder.appName("abn-assesment").getOrCreate()
 # Specify the path where you want to save the CSV file
 output_file_path = "client_data/result.csv"
 
-
+# Mapping to renname original column names {old:new}
 col_mapping = {"id":"client_identifier",
                "btc_a":"bitcoin_address",
                "cc_t":"credit_card_type"}

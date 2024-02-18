@@ -2,9 +2,24 @@ import logging
 from logging.handlers import RotatingFileHandler
 import os
 
-# Initiate logger
-def initiate_logger(logging_level=None) -> logging.Logger:
 
+# Logging level: numeric value
+# NOTSET:0
+# DEBUG:10
+# INFO:20
+# WARNING:30
+# ERROR:40
+# CRITICAL:50
+
+def initiate_logger(logging_level=None) -> logging.Logger:
+    """
+    Initialize and configure a logger for the application.
+
+    :param logging_level: The logging level to be set for the logger.
+    :type logging_level: int, optional
+    :return: The configured logger object.
+    :rtype: logging.Logger
+    """
     # Create a logs directory if it doesn't exist
     logs_dir = 'logs'
     os.makedirs(logs_dir, exist_ok=True)
