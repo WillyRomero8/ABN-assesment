@@ -22,12 +22,12 @@ def test_check_parameters():
 
 def test_standardize_directory():
     # Test when the input path starts with '/'
-    input_path = '/raw_data/dataset_one.csv'
-    expected_output = 'raw_data/dataset_one.csv'
+    input_path = '/src/raw_data/dataset_one.csv'
+    expected_output = 'src/raw_data/dataset_one.csv'
     assert standardize_directory(input_path) == expected_output
 
     # Test when the input path doesn't start with '/'
-    input_path = 'raw_data/dataset_one.csv'
+    input_path = 'src/raw_data/dataset_one.csv'
     assert standardize_directory(input_path) == expected_output
 
     # Test when the directory doesn't exist
@@ -39,9 +39,10 @@ def test_standardize_directory():
 def test_df_read_excluding_cols():
     
     #Test when there are no columns to exclude are properly set
-    cwd = os.getcwd()
-    rel_path = "raw_data/test_dataset.csv"
-    file_path = os.path.join(cwd, rel_path)
+    # cwd = os.getcwd()
+    # rel_path = "src/raw_data/test_dataset.csv"
+    # file_path = os.path.join(cwd, rel_path)
+    file_path = 'src/raw_data/test_dataset.csv'
 
     expected_df = spark.read.csv(file_path, header=True, inferSchema=True)
 
