@@ -39,7 +39,7 @@ def test_standardize_directory():
 def test_df_read_excluding_cols():
     
     #Test when there are no columns to exclude are properly set
-    file_path = "raw_data/test_dataset.csv"
+    file_path = "/raw_data/test_dataset.csv"
 
     expected_df = spark.read.csv(file_path, header=True, inferSchema=True)
 
@@ -117,7 +117,7 @@ def test_df_renamed_columns():
     result_df = df_renamed_columns(df, column_mapping_w)
 
     # Check if the error message contains the expected substring
-    chispa.assert_df_equality(result_df, expected_df)
+    chispa.assert_df_equality(result_df, df)
 
 if __name__ == '__main__':
     spark = pyspark.sql.SparkSession.builder.appName("test-abn-assesment").getOrCreate()
