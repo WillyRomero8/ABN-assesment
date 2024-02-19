@@ -1,5 +1,8 @@
 from setuptools import setup, find_packages
 
+# navigate to your project directory, and run the following command:
+# python setup.py sdist
+
 setup(
     name='abn-assesment',
     version='1.0',
