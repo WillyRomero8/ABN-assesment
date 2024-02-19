@@ -64,8 +64,6 @@ def standardize_directory(file_path:str)-> str:
     """
     if file_path.startswith('/') or file_path.startswith('\\'):
         file_path = file_path[1:]
-    
-    file_path = file_path.replace('/', '\\')
 
     if os.path.exists(file_path):
         logger.info(f"The path {file_path} exists")

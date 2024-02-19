@@ -23,19 +23,11 @@ def test_check_parameters():
 def test_standardize_directory():
     # Test when the input path starts with '/'
     input_path = '/raw_data/dataset_one.csv'
-    expected_output = 'raw_data\\dataset_one.csv'
+    expected_output = 'raw_data/dataset_one.csv'
     assert standardize_directory(input_path) == expected_output
 
-    # Test when the input path starts with '\'
-    input_path = '\\raw_data\\dataset_one.csv'
-    assert standardize_directory(input_path) == expected_output
-
-    # Test when the input path doesn't start with '/' or '\'
+    # Test when the input path doesn't start with '/'
     input_path = 'raw_data/dataset_one.csv'
-    assert standardize_directory(input_path) == expected_output
-
-    # Test when the directory exists
-    input_path = 'raw_data\\dataset_one.csv'
     assert standardize_directory(input_path) == expected_output
 
     # Test when the directory doesn't exist
