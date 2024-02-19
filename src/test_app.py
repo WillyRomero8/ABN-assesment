@@ -39,7 +39,9 @@ def test_standardize_directory():
 def test_df_read_excluding_cols():
     
     #Test when there are no columns to exclude are properly set
-    file_path = "/raw_data/test_dataset.csv"
+    cwd = os.getcwd()
+    rel_path = "raw_data/test_dataset.csv"
+    file_path = os.path.join(cwd, rel_path)
 
     expected_df = spark.read.csv(file_path, header=True, inferSchema=True)
 

@@ -64,12 +64,15 @@ def standardize_directory(file_path:str)-> str:
     """
     if file_path.startswith('/') or file_path.startswith('\\'):
         file_path = file_path[1:]
+    
+    cwd = os.getcwd()
+    data_path = os.path.join(cwd, file_path)
 
-    if os.path.exists(file_path):
-        logger.info(f"The path {file_path} exists")
+    if os.path.exists(data_path):
+        logger.info(f"The path {data_path} exists")
     else:
-        logger.error(f"The path {file_path} does not exists")
-        raise FileNotFoundError(f"The path {file_path} does not exists")
+        logger.error(f"The path {data_path} does not exists")
+        raise FileNotFoundError(f"The path {data_path} does not exists")
     
     return file_path
 
