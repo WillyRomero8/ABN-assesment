@@ -112,14 +112,12 @@ def test_df_renamed_columns():
     # Define column mapping
     column_mapping_w = {"id_fake": "id_country"}
 
-    # Attempt to rename a nonexistent column
-    with pytest.raises(Exception) as e_info:
-        result_df = df_renamed_columns(df, column_mapping_w)
+    # Attempt to rename a nonexistent column, no changes expected
+    # A warning log will be tracked
+    result_df = df_renamed_columns(df, column_mapping_w)
 
     # Check if the error message contains the expected substring
-    assert "cannot resolve 'id_fake' given input columns" in str(e_info.value)
-
-
+    chispa.assert_df_equality(result_df, expected_df)
 
 if __name__ == '__main__':
     spark = pyspark.sql.SparkSession.builder.appName("test-abn-assesment").getOrCreate()
