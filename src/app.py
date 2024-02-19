@@ -119,12 +119,12 @@ def df_filter_rows(df:pyspark.sql.DataFrame, condition:list, attribute:str)-> py
     """
     try:
         filtered_df = df.filter(col(attribute).isin(condition))
+        logger.info(f"The output dataset will contain the records of the following nationalitites:{condition}")
+        return filtered_df
+        
     except Exception as e:
         logger.error(f"An error occurred in df_filter_rows: {str(e)}")
-    
-    logger.info(f"The output dataset will contain the records of the following nationalitites:{condition}")
-
-    return filtered_df
+        raise e
 
 def df_renamed_columns(df:pyspark.sql.DataFrame, column_mapping:dict) -> pyspark.sql.DataFrame:
     """
