@@ -168,6 +168,7 @@ def df_to_csv(df:pyspark.sql.DataFrame, output_path:str):
     try:
         # Save the DataFrame as a CSV file
         df.coalesce(1).write.mode('overwrite').option("header", "true").csv(output_path)
+        logger.info("The ouput datsat has been generated in client_data/")
     except Exception as e:
          print(f"An error occurred when trying to write the output dataframe: {str(e)}")
 
