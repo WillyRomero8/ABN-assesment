@@ -19,7 +19,8 @@ setup(
         'Programming Language :: Python :: 3.8.10'
     ],
     install_requires=[
-        "colorama==0.4.6"
+        "chispa==0.9.4",
+        "colorama==0.4.6",
         "exceptiongroup==1.2.0",
         "iniconfig==2.0.0",
         "packaging==23.2",

@@ -32,6 +32,14 @@ This application is designed to process csv files and generate an output by:
 - Python 3.8.10
 - pyspark library (3.5.0)
 - py4j library (0.10.9.7)
+- chispa library (0.9.4)
+- colorama library (0.4.6)
+- exceptiongroup library (1.2.0)
+- iniconfig library (2.0.0)
+- packaging library (23.2)
+- pluggy library (1.4.0)
+- pytest library (8.0.1)
+- tomli library (2.0.1)
 
 ## Installation
 
